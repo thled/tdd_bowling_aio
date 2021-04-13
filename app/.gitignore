@@ -1,0 +1,7 @@
+vendor
+phpunit.xml
+.phpunit.result.cache
+.php_cs.cache
+phpunit-watcher.yml
+infection.json
+infection.log
