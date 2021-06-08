@@ -1,11 +1,13 @@
 {
     "require-dev": {
-        "phpunit/phpunit": "^9.5"
+        "phpunit/phpunit": "^9.5",
+        "pestphp/pest": "^1.3",
+        "thled/pest-plugin-shorthands": "^1.1"
     },
     "autoload": {
         "psr-4": {
             "Bowling\\": "src/",
-            "Bowling\\Test\\": "test/"
+            "Bowling\\Test\\": "tests/"
         }
     }
 }

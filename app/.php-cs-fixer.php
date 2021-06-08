@@ -4,7 +4,7 @@
  * https://mlocati.github.io/php-cs-fixer-configurator/#version:2.18.2|configurator
  * you can change this configuration by importing this file.
  */
-return PhpCsFixer\Config::create()
+return (new PhpCsFixer\Config())
     ->setRiskyAllowed(true)
     ->setRules([
         // Each line of multi-line DocComments must have an asterisk [PSR-5] and must be aligned with the first one.
@@ -15,12 +15,10 @@ return PhpCsFixer\Config::create()
         'array_push' => true,
         // PHP arrays should be declared using the configured syntax.
         'array_syntax' => ['syntax'=>'short'],
-        // Binary operators should be surrounded by space as configured.
-        'binary_operator_spaces' => ['align_double_arrow'=>false],
         // There MUST be one blank line after the namespace declaration.
         'blank_line_after_namespace' => true,
         // An empty line feed must precede any configured statement.
-        'blank_line_before_statement' => ['statements'=>['continue','die','exit','return','throw']],
+        'blank_line_before_statement' => ['statements'=>['continue','exit','return','throw']],
         // The body of each structure MUST be enclosed by braces. Braces should be properly placed. Body of braces should be properly indented.
         'braces' => ['allow_single_line_anonymous_class_with_empty_body'=>true,'allow_single_line_closure'=>true,'position_after_functions_and_oop_constructs'=>'same'],
         // A single space or none should be between cast and variable.
@@ -352,7 +350,7 @@ return PhpCsFixer\Config::create()
         // Use `null` coalescing operator `??` where possible. Requires PHP >= 7.0.
         'ternary_to_null_coalescing' => true,
         // PHP multi-line arrays should have a trailing comma.
-        'trailing_comma_in_multiline_array' => true,
+        'trailing_comma_in_multiline' => true,
         // Arrays should be formatted like function/method arguments, without leading or trailing single line space.
         'trim_array_spaces' => true,
         // Unary operators should be placed adjacent to their operands.
@@ -367,7 +365,7 @@ return PhpCsFixer\Config::create()
         'whitespace_after_comma_in_array' => true,
     ])
     ->setFinder(PhpCsFixer\Finder::create()
-        ->in([__DIR__.'/src', __DIR__.'/test'])
+        ->in([__DIR__.'/src', __DIR__.'/tests'])
         ->files()->notName(['Kernel.php', 'bootstrap.php'])
     )
 ;

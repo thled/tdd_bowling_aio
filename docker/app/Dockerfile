@@ -1,15 +1,22 @@
-FROM php:8.0.3-cli-alpine3.13
+FROM php:8.0.7-cli-alpine3.13
 
-# install neovim and dependencies
 RUN apk add --no-cache \
-    neovim \
     # needed by dockerfile
     curl g++ \
+    # install neovim
+    neovim \
     # needed by neovim as provider
     python3-dev py-pip gcc musl-dev \
     nodejs yarn \
     # needed by fzf
-    bash file git ripgrep
+    bash file git ripgrep \
+    # needed by watcher (clear-screen)
+    ncurses \
+    # install watcher
+    && curl -fLo watcher.tar.xz \
+    https://github.com/watchexec/watchexec/releases/download/cli-v1.16.1/watchexec-1.16.1-x86_64-unknown-linux-musl.tar.xz \
+    && tar -xf watcher.tar.xz \
+    && mv watchexec-1.16.1-x86_64-unknown-linux-musl/watchexec /usr/local/bin/
 
 # create user
 RUN adduser -D -g '' phpuser
@@ -48,8 +55,8 @@ RUN composer global require \
     phpstan/phpstan-deprecation-rules \
     ergebnis/phpstan-rules \
     thecodingmachine/phpstan-strict-rules \
-    # test watcher
-    spatie/phpunit-watcher \
+    thecodingmachine/phpstan-safe-rule \
+    vimeo/psalm \
     # mutation testing
     infection/infection
 
@@ -68,11 +75,14 @@ run_ci (rc): Run pipeline steps."' >> ~/.bashrc \
     && echo 'alias rl=run_lint' >> ~/.bashrc \
     && echo 'alias run_fmt="php-cs-fixer fix --allow-risky=yes"' >> ~/.bashrc \
     && echo 'alias rf=run_fmt' >> ~/.bashrc \
-    && echo 'alias run_analyse="phpstan analyse"' >> ~/.bashrc \
+    && echo 'alias run_analyse="psalm; phpstan analyse"' >> ~/.bashrc \
     && echo 'alias ra=run_analyse' >> ~/.bashrc \
-    && echo 'alias run_test="/app/vendor/bin/phpunit --testdox"' >> ~/.bashrc \
+    && echo 'alias run_test="/app/vendor/bin/pest"' >> ~/.bashrc \
     && echo 'alias rt=run_test' >> ~/.bashrc \
-    && echo 'alias run_watch="phpunit-watcher watch"' >> ~/.bashrc \
+    && echo 'alias run_watch="watchexec -c \
+        -w /app/src \
+        -w /app/tests \
+        \"/app/vendor/bin/pest --testsuite=unit\""' >> ~/.bashrc \
     && echo 'alias rw=run_watch' >> ~/.bashrc \
     && echo 'run_ci() { run_lint; run_analyse; run_test; }' >> ~/.bashrc \
     && echo 'alias rc=run_ci' >> ~/.bashrc
